@@ -2,7 +2,6 @@ import express from "express";
 import { readFile, writeFile, stat } from "fs/promises";
 
 const app = express();
-const iconCache = JSON.parse(await readFile("config/iconCache.json", "utf-8"));
 
 async function exists(path) {
 	const stats = await stat(path).catch(() => null);
@@ -22,6 +21,8 @@ if(!await exists("config/services.json")) {
 if(!await exists("config/iconCache.json")) {
 	await writeFile("config/iconCache.json", JSON.stringify({}));
 }
+
+const iconCache = JSON.parse(await readFile("config/iconCache.json", "utf-8"));
 
 app.get("/", async (req, res) => {
 	const config = JSON.parse(await readFile("config/config.json", "utf-8"));
