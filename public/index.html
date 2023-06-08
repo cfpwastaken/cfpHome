@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Cfp</title>
+
+	<link rel="stylesheet" href="/css/ui.css">
+	<link rel="stylesheet" href="/css/navbar.css">
+	<style>
+		body {
+			height: 100vh;
+			margin: 0;
+		}
+
+		.apps {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			gap: 5px;
+      margin-top: 5px;
+			justify-content: center;
+		}
+
+		.app {
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+			transition: scale 100ms, background-color 100ms;
+			padding: 10px;
+			border-radius: 5px;
+		}
+
+		.app:hover,
+		.app:focus {
+			scale: 105%;
+			background-color: #2f2f2f;
+		}
+
+		.app:active {
+			transition: scale 50ms;
+			scale: 95%;
+		}
+
+		.app a img {
+			width: 100px;
+			height: 100px;
+      border-radius: 5px;
+		}
+
+    .app span {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    #hello {
+      font-size: 1.5rem;
+      font-weight: bold;
+			text-align: center;
+			margin: 0;
+    }
+	</style>
+
+	<meta content="{{name}}" property="og:title">
+	<meta content="{{name}}" property="og:site_name">
+	<meta name="theme-color" content="{{accent}}">
+</head>
+<body>
+	<p id="hello">{{text}}</p>
+	<div class="apps">
+		{{services}}
+	</div>
+</body>
+</html>
