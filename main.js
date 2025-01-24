@@ -12,8 +12,9 @@ if(!await exists("config/config.json")) {
 	await writeFile("config/config.json", JSON.stringify({
 		name: "My cool Homelab!",
 		accent: "63dd76",
-		text: "Hello!"
-	}));
+		text: "Hello!",
+		background: "https://live.staticflickr.com/65535/53220049083_81bfd62a04_c.jpg" // Credits to Jeff Geerling
+	}, null, 2));
 }
 if(!await exists("config/services.json")) {
 	await writeFile("config/services.json", JSON.stringify([]));
@@ -29,12 +30,14 @@ app.get("/", async (req, res) => {
 	const services = JSON.parse(await readFile("config/services.json", "utf-8"));
 
 	let content = await readFile("public/index.html", "utf-8");
-	content = content.replaceAll("{{name}}", config.name).replaceAll("{{accent}}", config.accent).replaceAll("{{text}}", config.text);
+	content = content.replaceAll("{{name}}", config.name).replaceAll("{{accent}}", config.accent).replaceAll("{{text}}", config.text).replaceAll("{{background}}", config.background);
 	content = content.replaceAll("{{services}}", (await Promise.all(services.map(async s => {
 		// const icon = s.icon.startsWith("docker-hub:") ? `https://github.com/docker-library/docs/blob/master/${s.icon.replace("docker-hub:", "")}/logo.png?raw=true` : s.icon;
 		let icon = iconCache[s.name] || s.icon;
 		if(icon.startsWith("data:")) {
+			// ignore as we already have the icon
 		} else if(icon.startsWith("docker-hub:")) {
+			console.log("Caching docker-hub icon for", s.name);
 			const res = await fetch(`https://github.com/docker-library/docs/blob/master/${s.icon.replace("docker-hub:", "")}/logo.png?raw=true`);
 			if(res.status == 200) {
 				icon = `data:image/png;base64,${Buffer.from(await res.arrayBuffer()).toString("base64")}`;
@@ -44,7 +47,14 @@ app.get("/", async (req, res) => {
 					icon = `data:image/svg+xml;base64,${Buffer.from(await res.arrayBuffer()).toString("base64")}`;
 				}
 			}
+		} else if(icon.startsWith("sh:")) {
+			console.log("Caching self-hosted icon for", s.name);
+			const res = await fetch(`https://cdn.jsdelivr.net/gh/selfhst/icons/png/${s.icon.replace("sh:", "").toLowerCase().replaceAll(" ", "-")}.png`)
+			if(res.status == 200) {
+				icon = `data:image/png;base64,${Buffer.from(await res.arrayBuffer()).toString("base64")}`;
+			}
 		} else if(icon.startsWith("http:") || icon.startsWith("https:")) {
+			console.log("Caching remote icon for", s.name);
 			const res = await fetch(icon);
 			if(res.status == 200) {
 				if(icon.endsWith(".svg")) {

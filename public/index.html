@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Cfp</title>
+	<title>{{name}}</title>
 
 	<link rel="stylesheet" href="/css/ui.css">
 	<link rel="stylesheet" href="/css/navbar.css">
@@ -11,6 +11,10 @@
 		body {
 			height: 100vh;
 			margin: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
 		}
 
 		.apps {
@@ -34,7 +38,7 @@
 		.app:hover,
 		.app:focus {
 			scale: 105%;
-			background-color: #2f2f2f;
+			background-color: hsla(0, 0%, 18%, 0.5);
 		}
 
 		.app:active {
@@ -54,11 +58,25 @@
     }
 
     #hello {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
 			text-align: center;
 			margin: 0;
+			margin-bottom: 15px;
     }
+
+		#background {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: url("{{background}}");
+			background-size: cover;
+			filter: blur(20px);
+			z-index: -1;
+			opacity: 0.4;
+		}
 	</style>
 
 	<meta content="{{name}}" property="og:title">
@@ -66,6 +84,7 @@
 	<meta name="theme-color" content="{{accent}}">
 </head>
 <body>
+	<div id="background"></div>
 	<p id="hello">{{text}}</p>
 	<div class="apps">
 		{{services}}
